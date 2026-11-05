@@ -1,0 +1,11 @@
+[Unit]
+Description=Schedule Developer backup pull
+
+[Timer]
+OnCalendar=*-*-* 04:30:00
+Persistent=true
+AccuracySec=1min
+Unit=pull-backup.service
+
+[Install]
+WantedBy=timers.target

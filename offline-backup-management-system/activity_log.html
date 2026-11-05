@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Activity Log</title>
+  <style>
+    html,body{height:100%;margin:0;background:#000;color:#0f0;font-family:Courier,monospace}
+    #container{display:flex;flex-direction:column;height:100vh}
+    #summary{padding:10px;border-bottom:1px solid #063;background:#050a05;color:#9f9}
+    #log{flex:1;padding:12px;overflow:auto;white-space:pre-wrap;background:#000;color:#00ff00}
+    #controls{padding:8px;background:#0b0b0b;display:flex;gap:8px;align-items:center}
+    input#msg{flex:1;background:#000;color:#0f0;border:1px solid #063;outline:none;padding:6px}
+    button{background:#000;color:#0f0;border:1px solid #063;padding:6px 10px;cursor:pointer}
+    button:hover{background:#051}
+    .muted{color:#7f7}
+    .level-info{color:#9fff9f}
+    .level-warn{color:#ffd86b}
+    .level-error{color:#ff6b6b}
+    .timestamp{color:#6f6;font-size:0.9em;margin-right:6px}
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div id="summary" aria-live="polite"></div>
+    <pre id="log" aria-live="polite"></pre>
+    <div id="controls">
+      <input id="msg" placeholder="Taip mesej log dan tekan Enter" />
+      <select id="level">
+        <option value="info">Info</option>
+        <option value="warn">Warn</option>
+        <option value="error">Error</option>
+      </select>
+      <button id="add">Tambah</button>
+      <button id="clear">Kosongkan</button>
+      <div class="muted">Latar: hitam • Teks: hijau</div>
+    </div>
+  </div>
+  <script>
+    const MAX_LINES = 50;
+    function now(){return new Date().toLocaleString()}
+    function formatLine(entry){
+      return '['+entry.ts+'] '+entry.text;
+    }
+    function addLog(text, level='info'){
+      const entry = { ts: now(), text, level };
+      const logs = loadLogs();
+      logs.push(entry);
+      while(logs.length>MAX_LINES) logs.shift();
+      saveLogs(logs);
+      renderLogs(logs);
+      updateSummary(logs);
+    }
+    function renderLogs(logs){
+      const el = document.getElementById('log');
+      el.innerHTML = '';
+      logs.forEach(e=>{
+        const line = document.createElement('div');
+        const ts = document.createElement('span'); ts.className='timestamp'; ts.textContent='['+e.ts+']';
+        const txt = document.createElement('span'); txt.textContent=' '+e.text;
+        txt.className = 'level-'+(e.level||'info');
+        line.appendChild(ts); line.appendChild(txt);
+        el.appendChild(line);
+      });
+      el.scrollTop = el.scrollHeight;
+    }
+    function saveLogs(logs){ localStorage.setItem('activity_logs_v1', JSON.stringify(logs)); }
+    function loadLogs(){ try{ return JSON.parse(localStorage.getItem('activity_logs_v1')||'[]') }catch(e){ return [] } }
+    document.getElementById('add').addEventListener('click', ()=>{
+      const v = document.getElementById('msg').value.trim();
+      const level = document.getElementById('level').value;
+      if(v){ addLog(v, level); document.getElementById('msg').value=''; }
+    });
+    document.getElementById('clear').addEventListener('click', ()=>{ document.getElementById('log').textContent = '' });
+    document.getElementById('msg').addEventListener('keydown', (e)=>{ if(e.key === 'Enter'){ document.getElementById('add').click() } });
+
+    function updateSummary(logs){
+      const s = document.getElementById('summary');
+      const last = logs[logs.length-1];
+      const running = logs.filter(l=>/running script/i.test(l.text)).slice(-1)[0];
+      const moves = logs.filter(l=>/copy|move/i.test(l.text)).map(l=>l.text);
+      s.textContent = '';
+      s.textContent += 'Last event: ' + (last? formatLine(last) : '—') + '\n';
+      s.textContent += 'Running: ' + (running ? running.text : 'none') + '\n';
+      s.textContent += 'Recent file ops: ' + (moves.length? moves.join(' | ') : 'none');
+    }
+
+    // persist and render on load
+    const initial = loadLogs();
+    if(initial && initial.length) renderLogs(initial);
+    updateSummary(initial);
+
+    // simulate network offline/online and record events
+    window.addEventListener('online', ()=> addLog('Network: online', 'info'));
+    window.addEventListener('offline', ()=> addLog('Network: offline', 'warn'));
+
+    // Example starter lines if empty
+    if(!initial || !initial.length){
+      addLog('Activity log started', 'info');
+      addLog('Ready to receive messages', 'info');
+    }
+  </script>
+</body>
+</html>

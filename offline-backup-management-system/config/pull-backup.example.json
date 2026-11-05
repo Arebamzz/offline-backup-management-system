@@ -1,0 +1,123 @@
+{
+  "remote": {
+    "host": "YOUR_SSH_USERNAME@203.0.113.10",
+    "base": "/YOUR_PATH/remote-backups",
+    "queueRoot": "/YOUR_PATH/remote-backups/In_Progress/.Transfer_Queue",
+    "doneRoot": "/YOUR_PATH/completed-backups",
+    "inProgressPath": "/YOUR_PATH/remote-backups/In_Progress",
+    "lockFile": "/YOUR_PATH/remote-backups/.FTP.lock",
+    "replacementDirs": [
+      "SystemA-ProdBackup",
+      "SystemB-ProdBackup",
+      "ProjectEnvironment"
+    ]
+  },
+  "local": {
+    "mount": "/YOUR_PATH/backup-storage",
+    "root": "/YOUR_PATH/backup-storage/backup_temp",
+    "stageRoot": "/YOUR_PATH/backup-storage/.pull_staging",
+    "expectedUuid": "YOUR_DISK_UUID",
+    "lockFile": "/var/lib/backupsvc/pull_backup.lock",
+    "logFile": "/home/YOUR_USERNAME/.local/share/offline-backup/pull_backup.log",
+    "owner": "YOUR_BACKUP_USER",
+    "group": "YOUR_BACKUP_GROUP",
+    "rootMode": "750"
+  },
+  "ssh": {
+    "key": "/home/YOUR_USERNAME/.ssh/YOUR_SSH_KEY",
+    "knownHosts": "/home/YOUR_USERNAME/.ssh/known_hosts",
+    "connectTimeoutSeconds": 30,
+    "identitiesOnly": true,
+    "batchMode": true,
+    "strictHostKeyChecking": true
+  },
+  "lan": {
+    "enabled": true,
+    "interface": "YOUR_NETWORK_INTERFACE",
+    "ipv4": "192.0.2.20/24",
+    "waitSeconds": 90,
+    "requireDefaultRoute": true
+  },
+  "safetyGuard": {
+    "minFiles": 3,
+    "minBytes": 104857600
+  },
+  "developerDone": {
+    "reserveBytes": 2147483648
+  },
+  "worm": {
+    "root": "/YOUR_PATH/backup-storage/back_up_worm",
+    "keepDays": 5,
+    "owner": "YOUR_BACKUP_USER",
+    "group": "YOUR_BACKUP_GROUP",
+    "dirMode": "750",
+    "fileMode": "640"
+  },
+  "docs": {
+    "replacementDocs": [],
+    "localRoot": "/YOUR_PATH/backup-storage/docs_backup",
+    "dbPath": "/YOUR_PATH/backup-storage/docs_backup/docs.sqlite",
+    "servers": [
+      {
+        "id": 1,
+        "name": "ExampleFileServer",
+        "ip": "192.0.2.10",
+        "username": "YOUR_SSH_USERNAME",
+        "passwordHint": "",
+        "paths": [
+          {
+            "localPath": "/YOUR_PATH/backup-storage/docs_backup/ExampleFileServer/bankin_slip_1.1",
+            "remotePath": "/YOUR_PATH/source-documents/bankin_slip_1.1",
+            "lastSynced": null
+          },
+          {
+            "localPath": "/YOUR_PATH/backup-storage/docs_backup/ExampleFileServer/cit_1.1",
+            "remotePath": "/YOUR_PATH/source-documents/cit_1.1",
+            "lastSynced": null
+          },
+          {
+            "localPath": "/YOUR_PATH/backup-storage/docs_backup/ExampleFileServer/receipt_book",
+            "remotePath": "/YOUR_PATH/source-documents/receipt_book",
+            "lastSynced": null
+          },
+          {
+            "localPath": "/YOUR_PATH/backup-storage/docs_backup/ExampleFileServer/wcn",
+            "remotePath": "/YOUR_PATH/source-documents/wcn",
+            "lastSynced": null
+          },
+          {
+            "localPath": "/YOUR_PATH/backup-storage/docs_backup/ExampleFileServer/route",
+            "remotePath": "/YOUR_PATH/source-documents/route",
+            "lastSynced": null
+          }
+        ]
+      }
+    ],
+    "serverDbPath": "/YOUR_PATH/backup-storage/docs_backup/docs_servers.sqlite"
+  },
+  "email": {
+    "from": "support@example.com",
+    "to": [
+      "backup@example.com"
+    ],
+    "msmtpBin": "/usr/bin/msmtp",
+    "msmtpConfig": "/etc/msmtprc"
+  },
+  "logging": {
+    "mirrorToConsole": false
+  },
+  "requiredCommands": [
+    "bash",
+    "ssh",
+    "rsync",
+    "findmnt",
+    "mountpoint",
+    "flock",
+    "ip",
+    "networkctl",
+    "hostname",
+    "df",
+    "du",
+    "chown"
+  ]
+}

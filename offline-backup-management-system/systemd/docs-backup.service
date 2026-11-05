@@ -1,0 +1,14 @@
+[Unit]
+Description=Docs Library backup to offline 4TB disk
+Wants=network-online.target
+After=network-online.target
+RequiresMountsFor=/YOUR_PATH/backup-storage
+
+[Service]
+Type=oneshot
+User=YOUR_USERNAME
+Group=YOUR_USERNAME
+Environment=HOME=/home/YOUR_USERNAME
+Environment=OFFLINE_BACKUP_MIRROR_CONSOLE=1
+WorkingDirectory=/YOUR_PATH/offline-backup-management-system
+ExecStart=/YOUR_PATH/offline-backup-management-system/.venv/bin/python /YOUR_PATH/offline-backup-management-system/bin/pull_docs.py --config /YOUR_PATH/offline-backup-management-system/config/pull-backup.json

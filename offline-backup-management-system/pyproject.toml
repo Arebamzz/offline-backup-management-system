@@ -1,0 +1,8 @@
+[project]
+name = "offline-backup-script"
+version = "1.0.0"
+description = "Configurable Python offline pull backup workflow."
+requires-python = ">=3.8"
+
+[tool.compileall]
+quiet = 1

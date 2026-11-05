@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Offline Backup
+Comment=Configure and run the offline pull backup
+Exec=/YOUR_PATH/offline-backup-management-system/pull_backup_gui.sh
+Icon=/YOUR_PATH/offline-backup-management-system/assets/offline-backup.svg
+Path=/YOUR_PATH/offline-backup-management-system
+Terminal=false
+Categories=Utility;System;
+StartupWMClass=offline-backup

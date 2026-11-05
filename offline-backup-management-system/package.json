@@ -1,0 +1,22 @@
+{
+  "name": "offline-backup-script",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Configurable Node.js offline pull backup workflow.",
+  "bin": {
+    "pull-backup": "./bin/pull-backup.js"
+  },
+  "scripts": {
+    "start": "node ./bin/pull-backup.js",
+    "check": "node ./scripts/check-syntax.js",
+    "start-log-server": "node ./log-server.js",
+    "send-log": "node ./send_log.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+  ,
+  "dependencies": {
+    "ws": "^8.13.0"
+  }
+}
